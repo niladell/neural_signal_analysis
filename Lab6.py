@@ -1,22 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle as pkl
+from sklearn import linear_model
 
 data = np.load('Python_data/emu018Pdata.pkl')
 
-## Exercise 1
-cohe_data = data['cohe'].astype(np.float)
-unique_cohe = sorted(set(cohe_data))
-coherences = [unique_cohe[::-1],unique_cohe[1:]] #13 elements
+coherences = data['cohe'].astype(np.float) * (data['stimulus'].astype(np.float) >0 ) +\
+ -1 * data['cohe'].astype(np.float) * (data['stimulus'].astype(np.float)  == 0 )
+#print(coherences)
 
-correct = np.zeros([len(coherences)])
-counter = np.zeros([len(coherences)])
+regres = linear_model.LinearRegression()
 
-for i, item in enumerate(data['correct']):
-    index = coherences.index(cohe_data[i])
-    if i 
-    correct[index] = correct[index] + float(item)
-    counter[index] = counter[index] + 1
-correct = correct / counter * 100
+spikes1 = data['nspikes1'].astype(np.float)/2
+coherences = coherences.reshape(-1,1)
+print(np.shape(spikes1))
+print(np.shape(coherences))
 
-print(correct)
+regres.fit(coherences, spikes1)
+
+print("Coeficients", regres.coef_, " -- Intercept (w0):  ", regres.intercept_)
+
+plt.plot(coherences, regres.predict(coherences))
+
+plt.scatter(coherences, spikes1)
+
+plt.show()
