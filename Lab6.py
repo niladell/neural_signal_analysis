@@ -19,8 +19,16 @@ regres.fit(coherences, spikes1)
 
 print("Coeficients", regres.coef_, " -- Intercept (w0):  ", regres.intercept_)
 
-plt.plot(coherences, regres.predict(coherences))
+print("R2", regres.score(coherences, spikes1))
 
+plot_label = str(regres.coef_[0]) + 'x + ' + str(regres.intercept_)
+plt.plot(coherences, regres.predict(coherences), label=plot_label)
 plt.scatter(coherences, spikes1)
+plt.title('Linear regression')
+plt.xlabel('Coherence (%))')
+plt.ylabel('Firing rate (Hz)')
+plt.legend(loc='best') #(str(regres.coef) + 'x + ' str(regres.interccept_))
 
 plt.show()
+
+
